@@ -1,0 +1,22 @@
+.header
+    display: grid
+    justify-items: center
+    grid-template-areas: 'social' 'title' 'slogan'
+    padding: var(--container-padding)
+    margin-bottom: 30px
+
+.header__social
+    grid-area: 'social'
+
+.header__title
+    grid-area: 'title'
+    font-family: var(--secondary-font)
+    color: var(--primary-color)
+    line-height: 1
+    margin: 0
+
+.header__slogan
+    color: var(--fg-color)
+    grid-area: 'slogan'
+    font-size: 0.75rem
+    letter-spacing: 6px

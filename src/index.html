@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@eduardotorresdev</title>
+  <script src="https://kit.fontawesome.com/59222d8a8d.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="content">
+    <div class="container">
+      <header class="header">
+        <div class="header__social social">
+          <ul class="social__list">
+            {{#social}}
+            <li class="social__item">
+              <a href="{{url}}" class="social__link">
+                {{#icon}}
+                <i class="{{icon}}"></i>
+                {{/icon}}
+                {{^icon}}
+                <i class="fa-brands fa-{{name}}"></i>
+                {{/icon}}
+              </a>
+            </li>
+            {{/social}}
+          </ul>
+        </div>
+        <h1 class="header__title title">
+          eduardotorres
+        </h1>
+        <span class="header__slogan">
+          desenvolvedor full-stack
+        </span>
+      </header>
+      <section class="projetos">
+        <h2 class="experiencias__title title">
+          ~ projetos
+        </h2>
+
+      </section>
+      <section class="experiencias">
+        <h2 class="experiencias__title title">
+          ~ experiência
+        </h2>
+        <ul class="experiencias__list">
+          {{#experiencias}}
+          <li class="experiencias__item">
+            <div class="experiencia experiencia--{{style}}">
+              <div class="experiencia__media">
+                <img src="{{logo}}" alt="" class="experiencia__img">
+              </div>
+              <div class="experiencia__header">
+                <h3 class="experiencia__title title">
+                  {{title}}
+                </h3>
+                {{#tag}}
+                <span class="experiencia__tag">
+                  {{tag}}
+                </span>
+                {{/tag}}
+              </div>
+              <span class="experiencia__role">
+                {{role}}
+              </span>
+            </div>
+          </li>
+          {{/experiencias}}
+        </ul>
+      </section>
+    </div>
+  </div>
+  <script type="module" src="/js/main.js"></script>
+</body>
+
+</html>

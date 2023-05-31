@@ -1,0 +1,27 @@
+social:
+  - name: linkedin
+    url: https://google.com
+  - name: instagram
+    url: https://google.com
+  - name: github
+    url: https://google.com
+  - name: e-mail
+    url: https://google.com
+    icon: fa-solid fa-envelope
+experiencias:
+  - logo: /vite.svg
+    title: Globo.com
+    tag: atualmente
+    role: Desenvolvedor front-end
+  - logo: /vite.svg
+    title: Maximize
+    tag: 2021-2022
+    role: Desenvolvedor full-stack
+  - logo: /vite.svg
+    title: FIEMA
+    tag: 2019-2021
+    role: Estágio em desenvolvimento web
+  - logo: /vite.svg
+    title: Universidade Federal do Maranhão
+    role: Bacharel em Ciência da Computação
+    style: fill

@@ -1,0 +1,57 @@
+.experiencia
+    display: grid
+    grid-template-areas: 'media header' 'media role'
+    grid-template-columns: 40px 1fr
+    column-gap: 7px
+    row-gap: 8px
+
+    &--fill
+        background: #2d2d2d
+        padding: 10px 5px
+        row-gap: 5px
+        border-radius: 8px
+
+        .experiencia__title
+            font-size: 0.875rem
+            font-weight: 400
+            color: var(--fg-color)
+        
+        .experiencia__role
+            font-size: 0.9rem
+            font-weight: bold
+            color: var(--gold-color)
+
+.experiencia__media
+    grid-area: media
+    display: flex
+    justify-content: center
+    align-content: center
+    padding: 5px 7px
+
+.experiencia__img
+    object-fit: contain
+
+.experiencia__header
+    display: grid
+    grid-template-columns: auto 1fr
+    column-gap: 10px
+    grid-area: header
+
+.experiencia__title
+    color: var(--white)
+    margin: 0
+
+.experiencia__role
+    grid-area: role
+    color: var(--white)
+
+.experiencia__tag
+    background: var(--dark-fg-color)
+    color: var(--white)
+    justify-self: start
+    font-size: 0.625rem
+    font-weight: bold
+    border-radius: 16px
+    padding: 2px 5px
+    align-self: center
+
