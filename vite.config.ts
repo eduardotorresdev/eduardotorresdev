@@ -17,7 +17,12 @@ export default defineConfig({
 			adapter: adapter({
 				pages: 'build',
 				assets: 'build',
-				fallback: undefined,
+				/*
+				 * Sem isso, o Pages devolve a home com HTTP 200 pra qualquer caminho
+				 * inexistente (soft-404) e o buscador indexa lixo como duplicata da
+				 * home. Com o 404.html o Pages responde 404 de verdade.
+				 */
+				fallback: '404.html',
 				precompress: false,
 				strict: true
 			}),
