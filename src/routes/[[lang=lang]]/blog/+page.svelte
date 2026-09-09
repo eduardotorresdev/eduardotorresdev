@@ -1,14 +1,20 @@
 <script lang="ts">
 	import PostItem from '$lib/components/PostItem.svelte';
 	import Seo from '$lib/components/Seo.svelte';
-	import { href, t } from '$lib/i18n';
+	import { href, localeFile, t } from '$lib/i18n';
 
 	let { data } = $props();
 	const locale = $derived(data.locale);
 	const d = $derived(t(locale));
 </script>
 
-<Seo {locale} title={d.nav.blog} description={d.sections.blog.lead} />
+<Seo
+	{locale}
+	title={d.nav.blog}
+	description={d.sections.blog.lead}
+	image="/og/{localeFile[locale]}/site/blog.png"
+	breadcrumbs={[{ name: d.nav.blog, path: href(locale, 'blog') }]}
+/>
 
 <div class="container blog">
 	<header class="head">

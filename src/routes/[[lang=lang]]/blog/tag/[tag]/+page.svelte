@@ -1,14 +1,23 @@
 <script lang="ts">
 	import PostItem from '$lib/components/PostItem.svelte';
 	import Seo from '$lib/components/Seo.svelte';
-	import { href, t } from '$lib/i18n';
+	import { href, localeFile, t } from '$lib/i18n';
 
 	let { data } = $props();
 	const locale = $derived(data.locale);
 	const d = $derived(t(locale));
 </script>
 
-<Seo {locale} title={d.blogMeta.taggedWith(data.tag)} />
+<Seo
+	{locale}
+	title={d.blogMeta.taggedWith(data.tag)}
+	description={d.blogMeta.tagDescription(data.tag, data.posts.length)}
+	image="/og/{localeFile[locale]}/site/blog.png"
+	breadcrumbs={[
+		{ name: d.nav.blog, path: href(locale, 'blog') },
+		{ name: data.tag, path: href(locale, 'blog', 'tag', data.tag) }
+	]}
+/>
 
 <div class="container wrap">
 	<header class="head">

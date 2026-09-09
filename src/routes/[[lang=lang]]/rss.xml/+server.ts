@@ -1,10 +1,10 @@
 import { listPosts } from '$lib/content';
-import { href, localeFromParam, t } from '$lib/i18n';
+import { href, localeFile, localeFromParam, t } from '$lib/i18n';
 import { site } from '$lib/site';
 import type { EntryGenerator, RequestHandler } from './$types';
 
 export const prerender = true;
-export const entries: EntryGenerator = () => [{ lang: '' }];
+export const entries: EntryGenerator = () => [{ lang: '' }, { lang: 'en' }];
 
 const escape = (s: string) =>
 	s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -20,6 +20,7 @@ export const GET: RequestHandler = ({ params }) => {
 	<guid>${site.url}${href(locale, 'blog', post.slug)}</guid>
 	<pubDate>${new Date(post.meta.date).toUTCString()}</pubDate>
 	<description>${escape(post.meta.summary)}</description>
+	<enclosure url="${site.url}/og/${localeFile[locale]}/blog/${post.slug}.png" type="image/png" length="0"/>
 	${post.meta.tags.map((tag) => `<category>${escape(tag)}</category>`).join('')}
 </item>`
 		)
@@ -32,6 +33,11 @@ export const GET: RequestHandler = ({ params }) => {
 	<link>${site.url}${href(locale, 'blog')}</link>
 	<description>${escape(d.sections.blog.lead)}</description>
 	<language>${locale.toLowerCase()}</language>
+	<image>
+		<url>${site.url}/icon-512.png</url>
+		<title>${escape(site.name)} · ${escape(d.nav.blog)}</title>
+		<link>${site.url}${href(locale, 'blog')}</link>
+	</image>
 	<atom:link href="${site.url}${href(locale, undefined, 'rss.xml')}" rel="self" type="application/rss+xml"/>
 	${items}
 </channel>

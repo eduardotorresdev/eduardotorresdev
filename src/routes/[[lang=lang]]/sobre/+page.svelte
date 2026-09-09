@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Seo from '$lib/components/Seo.svelte';
 	import SocialLinks from '$lib/components/SocialLinks.svelte';
-	import { t } from '$lib/i18n';
+	import { href, localeFile, t } from '$lib/i18n';
 	import { aboutContent } from '$lib/about';
 
 	let { data } = $props();
@@ -10,7 +10,13 @@
 	const about = $derived(aboutContent[locale]);
 </script>
 
-<Seo {locale} title={d.about.title} description={d.about.lead} />
+<Seo
+	{locale}
+	title={d.about.title}
+	description={d.about.lead}
+	image="/og/{localeFile[locale]}/site/sobre.png"
+	breadcrumbs={[{ name: d.about.title, path: href(locale, 'sobre') }]}
+/>
 
 <article class="container about">
 	<header class="head">

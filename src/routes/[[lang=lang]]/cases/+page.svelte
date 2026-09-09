@@ -1,14 +1,20 @@
 <script lang="ts">
 	import CaseCard from '$lib/components/CaseCard.svelte';
 	import Seo from '$lib/components/Seo.svelte';
-	import { t } from '$lib/i18n';
+	import { href, localeFile, t } from '$lib/i18n';
 
 	let { data } = $props();
 	const locale = $derived(data.locale);
 	const d = $derived(t(locale));
 </script>
 
-<Seo {locale} title={d.sections.cases.title} description={d.sections.cases.lead} />
+<Seo
+	{locale}
+	title={d.sections.cases.title}
+	description={d.sections.cases.lead}
+	image="/og/{localeFile[locale]}/site/cases.png"
+	breadcrumbs={[{ name: d.nav.cases, path: href(locale, 'cases') }]}
+/>
 
 <div class="container cases-page">
 	<header class="head">

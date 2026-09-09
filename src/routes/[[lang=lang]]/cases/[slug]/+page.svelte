@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
 	import Seo from '$lib/components/Seo.svelte';
-	import { homeAnchor, localeFile, t } from '$lib/i18n';
+	import { homeAnchor, href, localeFile, t } from '$lib/i18n';
 
 	let { data } = $props();
 	const locale = $derived(data.locale);
@@ -16,6 +16,11 @@
 	description={entry.meta.summary}
 	type="article"
 	image={entry.meta.cover ?? `/og/${localeFile[locale]}/cases/${entry.slug}.png`}
+	schemaKind="CreativeWork"
+	breadcrumbs={[
+		{ name: d.nav.cases, path: href(locale, 'cases') },
+		{ name: entry.meta.title, path: href(locale, 'cases', entry.slug) }
+	]}
 />
 
 <article class="container case">

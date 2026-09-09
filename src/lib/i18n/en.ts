@@ -4,7 +4,9 @@ export const en: Dictionary = {
 	meta: {
 		siteName: 'Eduardo Torres',
 		description: 'Software engineer at Globo. I build front-ends that millions of people use every day.',
-		locale: 'en_US'
+		locale: 'en_US',
+		jobTitle: 'Software engineer',
+		imageAlt: 'Eduardo Torres, software engineer at Globo, in São Luís, Brazil'
 	},
 	nav: {
 		cases: 'Cases',
@@ -70,6 +72,8 @@ export const en: Dictionary = {
 		readingTime: (minutes: number) => `${minutes} min read`,
 		tags: 'Tags',
 		taggedWith: (tag: string) => `Posts tagged “${tag}”`,
+		tagDescription: (tag: string, count: number) =>
+			`${count} ${count === 1 ? 'post' : 'posts'} about ${tag} on Eduardo Torres' blog.`,
 		previous: 'Previous',
 		next: 'Next',
 		allPosts: 'All posts',

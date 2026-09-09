@@ -2,7 +2,9 @@ export const ptBR = {
 	meta: {
 		siteName: 'Eduardo Torres',
 		description: 'Engenheiro de software na Globo. Construo front-ends que milhões de pessoas usam todo dia.',
-		locale: 'pt_BR'
+		locale: 'pt_BR',
+		jobTitle: 'Engenheiro de software',
+		imageAlt: 'Eduardo Torres, engenheiro de software na Globo, em São Luís'
 	},
 	nav: {
 		cases: 'Cases',
@@ -74,6 +76,8 @@ export const ptBR = {
 		readingTime: (minutes: number) => `${minutes} min de leitura`,
 		tags: 'Tags',
 		taggedWith: (tag: string) => `Posts com a tag “${tag}”`,
+		tagDescription: (tag: string, count: number) =>
+			`${count} ${count === 1 ? 'post' : 'posts'} sobre ${tag} no blog de Eduardo Torres.`,
 		previous: 'Anterior',
 		next: 'Próximo',
 		allPosts: 'Todos os posts',

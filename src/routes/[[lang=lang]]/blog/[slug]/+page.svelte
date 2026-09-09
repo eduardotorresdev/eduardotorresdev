@@ -16,7 +16,13 @@
 	description={post.meta.summary}
 	type="article"
 	publishedAt={post.meta.date}
+	tags={post.meta.tags}
 	image={post.meta.cover ?? `/og/${localeFile[locale]}/blog/${post.slug}.png`}
+	schemaKind="BlogPosting"
+	breadcrumbs={[
+		{ name: d.nav.blog, path: href(locale, 'blog') },
+		{ name: post.meta.title, path: href(locale, 'blog', post.slug) }
+	]}
 />
 
 <article class="container post">
