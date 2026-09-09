@@ -5,5 +5,8 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
+# Sem hash no nome: 30 dias, pra troca de arte não ficar presa por um ano.
+/img/*
+  Cache-Control: public, max-age=2592000
 /_app/immutable/*
   Cache-Control: public, max-age=31536000, immutable
