@@ -104,34 +104,20 @@
 	}
 
 	$effect(() => stopChase);
-
-	// Com prefers-reduced-motion o vídeo não toca: fica só o poster.
-	function motion(video: HTMLVideoElement) {
-		if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-		video.removeAttribute('autoplay');
-		video.preload = 'none';
-		video.pause();
-	}
 </script>
 
 <footer class="footer" id="contato" use:typewriter onpointermove={trackSpot} onpointerleave={leaveSpot}>
-	<!--
-		Desenho a traço de São Luís animado, bem apagado, atrás de todo o footer.
-		O poster é o primeiro frame do vídeo, então a troca imagem → vídeo é invisível.
-	-->
-	<video
+	<!-- Desenho a traço de São Luís, bem apagado, atrás de todo o footer. -->
+	<img
 		class="bg"
-		src="/video/sao-luis.mp4"
-		poster="/img/sao-luis-sketch.webp"
-		autoplay
-		muted
-		loop
-		playsinline
-		disablepictureinpicture
+		src="/img/sao-luis-linhas.webp"
+		alt=""
 		aria-hidden="true"
-		tabindex="-1"
-		use:motion
-	></video>
+		width="880"
+		height="587"
+		loading="lazy"
+		decoding="async"
+	/>
 
 	<!-- Clarão que acompanha o ponteiro; fica entre o desenho de fundo e o conteúdo. -->
 	<div
