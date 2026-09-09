@@ -8,6 +8,10 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    # Chave pública; precisa existir já no `svelte-kit sync`, que gera os tipos
+    # de $env/static/public a partir do ambiente.
+    env:
+      PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
@@ -19,8 +23,6 @@ jobs:
       - run: bun run check
       - run: bun run test
       - run: bun run build
-        env:
-          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
       - uses: actions/upload-artifact@v4
         with:
           name: build

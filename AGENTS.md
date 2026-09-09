@@ -6,6 +6,7 @@ markdown, build 100% estático na Cloudflare Pages. Bilíngue: pt-BR na raiz, in
 ## Comandos
 
 ```bash
+cp .env.example .env   # PUBLIC_TURNSTILE_SITE_KEY precisa existir pro `svelte-kit sync`
 bun install
 bun run dev            # vite dev
 bun run build          # gera ./build (adapter-static)
