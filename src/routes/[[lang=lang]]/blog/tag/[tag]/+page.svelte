@@ -17,7 +17,7 @@
 	</header>
 	<ul role="list">
 		{#each data.posts as post (post.slug)}
-			<PostItem {post} {locale} />
+			<PostItem {post} {locale} level={2} />
 		{/each}
 	</ul>
 </div>

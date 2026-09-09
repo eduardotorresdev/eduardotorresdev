@@ -15,6 +15,8 @@ export const en: Dictionary = {
 		menu: 'Menu',
 		close: 'Close',
 		home: 'Home',
+		mainNav: 'Main',
+		adjacentPosts: 'Other posts',
 		skip: 'Skip to content',
 		switchLocale: 'Ler em português',
 		location: 'São Luís, MA, Brazil'

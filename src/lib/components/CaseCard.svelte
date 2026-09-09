@@ -3,7 +3,14 @@
 	import { href, t, type Locale } from '$lib/i18n';
 	import Icon from './Icon.svelte';
 
-	let { entry, locale, index }: { entry: Case; locale: Locale; index: number } = $props();
+	// Nos índices o card vem logo depois do <h1>, então precisa ser h2;
+	// na home ele vive sob o <h2> da seção e continua h3.
+	let {
+		entry,
+		locale,
+		index,
+		level = 3
+	}: { entry: Case; locale: Locale; index: number; level?: 2 | 3 } = $props();
 	const d = $derived(t(locale));
 	const url = $derived(href(locale, 'cases', entry.slug));
 </script>
@@ -18,7 +25,9 @@
 	</a>
 	<div class="body">
 		<p class="eyebrow">{entry.meta.client} · {entry.meta.year}</p>
-		<h3><a href={url}>{entry.meta.title}</a></h3>
+		<svelte:element this={`h${level}`} class="title">
+			<a href={url}>{entry.meta.title}</a>
+		</svelte:element>
 		<p class="summary">{entry.meta.summary}</p>
 		<ul class="stack" role="list">
 			{#each entry.meta.stack as tech (tech)}
@@ -75,10 +84,15 @@
 		padding: var(--sp-6);
 		align-content: start;
 	}
-	h3 a {
+	/* O nível do heading muda com o contexto; o tamanho, não. */
+	.title {
+		font-size: var(--fs-xl);
+		letter-spacing: -0.02em;
+	}
+	.title a {
 		text-decoration: none;
 	}
-	h3 a::after {
+	.title a::after {
 		content: '';
 		position: absolute;
 		inset: 0;

@@ -44,7 +44,7 @@
 	<div class="container bar">
 		<div class="identity">
 			<div class="identity-top">
-				<a class="brand" href={href(locale)} aria-label={d.nav.home}>{site.domain}</a>
+				<a class="brand" href={href(locale)}>{site.domain}</a>
 				<SocialLinks {locale} layout="bare" />
 			</div>
 			<p class="place">
@@ -65,7 +65,7 @@
 			{open ? d.nav.close : d.nav.menu}
 		</button>
 
-		<nav id="nav-principal" class="nav" class:is-open={open} aria-label="Principal">
+		<nav aria-label={d.nav.mainNav} id="nav-principal" class="nav" class:is-open={open}>
 			<ul role="list">
 				{#each items as item (item.key)}
 					<li class="item">
@@ -76,7 +76,7 @@
 								<ul class="pop-grid" role="list">
 									{#each preview.cases.slice(0, 3) as c (c.slug)}
 										<li>
-											<a href={href(locale, 'cases', c.slug)} class="pop-case">
+											<a href={href(locale, 'cases', c.slug)} class="pop-case" tabindex="-1">
 												{#if c.meta.cover}
 													<img src={c.meta.cover} alt="" loading="lazy" width="160" height="100" />
 												{:else}
@@ -105,7 +105,7 @@
 									{#each preview.posts.slice(0, 3) as post (post.slug)}
 										<li>
 											<span class="pop-kind">{formatDate(locale, post.meta.date)}</span>
-											<a href={href(locale, 'blog', post.slug)}>{post.meta.title}</a>
+											<a href={href(locale, 'blog', post.slug)} tabindex="-1">{post.meta.title}</a>
 										</li>
 									{:else}
 										<li class="muted">{d.blogMeta.empty}</li>

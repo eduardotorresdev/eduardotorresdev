@@ -13,6 +13,8 @@ export const ptBR = {
 		menu: 'Menu',
 		close: 'Fechar',
 		home: 'Início',
+		mainNav: 'Principal',
+		adjacentPosts: 'Outros posts',
 		skip: 'Pular para o conteúdo',
 		switchLocale: 'Read in English',
 		location: 'São Luís, MA, Brasil'

@@ -18,7 +18,7 @@
 
 	<div class="cases">
 		{#each data.cases as entry, index (entry.slug)}
-			<CaseCard {entry} {locale} {index} />
+			<CaseCard {entry} {locale} {index} level={2} />
 		{/each}
 	</div>
 </div>

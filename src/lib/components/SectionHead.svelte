@@ -5,14 +5,22 @@
 		title,
 		lead,
 		id,
+		titleId,
 		children
-	}: { eyebrow?: string; title: string; lead?: string; id?: string; children?: Snippet } = $props();
+	}: {
+		eyebrow?: string;
+		title: string;
+		lead?: string;
+		id?: string;
+		titleId?: string;
+		children?: Snippet;
+	} = $props();
 </script>
 
 <div class="head" {id}>
 	{#if eyebrow}<p class="eyebrow">{eyebrow}</p>{/if}
 	<div class="row">
-		<h2>{title}</h2>
+		<h2 id={titleId}>{title}</h2>
 		{#if children}<div class="aside">{@render children()}</div>{/if}
 	</div>
 	{#if lead}<p class="lead">{lead}</p>{/if}

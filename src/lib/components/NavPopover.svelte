@@ -6,6 +6,9 @@
 <!--
 	Prévia decorativa: aparece ao passar o mouse no link pai (só em dispositivos com hover).
 	Fica fora da árvore de acessibilidade porque o link já leva ao conteúdo completo.
+	Os links de dentro levam `tabindex="-1"`: continuam clicáveis no hover, mas
+	saem da ordem de tabulação — senão o teclado entraria num painel que o leitor
+	de tela não anuncia (axe `aria-hidden-focus`).
 -->
 <div class="popover" aria-hidden="true">
 	<div class="arrow"></div>

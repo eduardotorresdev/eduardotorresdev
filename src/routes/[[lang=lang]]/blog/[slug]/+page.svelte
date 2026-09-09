@@ -40,7 +40,7 @@
 
 	<Body />
 
-	<nav class="adjacent" aria-label="Posts">
+	<nav class="adjacent" aria-label={d.nav.adjacentPosts}>
 		{#if data.adjacent.previous}
 			<a class="adj block block--interactive" href={href(locale, 'blog', data.adjacent.previous.slug)}>
 				<span class="eyebrow">{d.blogMeta.previous}</span>

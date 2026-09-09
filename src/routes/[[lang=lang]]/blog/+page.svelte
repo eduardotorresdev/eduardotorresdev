@@ -29,7 +29,7 @@
 	{#if data.posts.length}
 		<ul class="posts" role="list">
 			{#each data.posts as post (post.slug)}
-				<PostItem {post} {locale} />
+				<PostItem {post} {locale} level={2} />
 			{/each}
 		</ul>
 	{:else}
