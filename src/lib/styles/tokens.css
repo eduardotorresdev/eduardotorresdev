@@ -1,0 +1,59 @@
+:root {
+	/* Cores: monocromático */
+	--bg: #ededea;
+	--surface: #f6f6f3;
+	--ink: #111111;
+	--muted: #6b6b66;
+	--shadow: #b5b5b0;
+	--line: #cfcfca;
+	--focus: #111111;
+	--danger: #b3261e;
+
+	/* Hard shadow, sem blur */
+	--shadow-sm: 3px 3px 0 var(--shadow);
+	--shadow-md: 6px 6px 0 var(--shadow);
+	--shadow-lg: 10px 10px 0 var(--shadow);
+	--shadow-ink: 6px 6px 0 var(--ink);
+
+	/* Tipografia */
+	--font: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+	--font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+	--w-light: 300;
+	--w-regular: 400;
+	--w-heavy: 800;
+
+	/* Escala fluida */
+	--fs-xs: 0.8rem;
+	--fs-sm: 0.9rem;
+	--fs-md: 1.05rem;
+	--fs-lg: clamp(1.2rem, 1rem + 0.8vw, 1.5rem);
+	--fs-xl: clamp(1.8rem, 1.3rem + 2vw, 2.8rem);
+	--fs-2xl: clamp(2.6rem, 1.6rem + 4.2vw, 5.2rem);
+	--fs-3xl: clamp(3.2rem, 1.4rem + 7.5vw, 8.5rem);
+
+	/* Espaço */
+	--sp-1: 0.25rem;
+	--sp-2: 0.5rem;
+	--sp-3: 0.75rem;
+	--sp-4: 1rem;
+	--sp-6: 1.5rem;
+	--sp-8: 2rem;
+	--sp-12: 3rem;
+	--sp-16: 4rem;
+	--sp-24: 6rem;
+	--sp-32: 8rem;
+
+	/* Fluido até MacBook 14" (~1512px); só trava a partir do Full HD */
+	--container: 90rem;
+	--measure: 42rem;
+	--gutter: clamp(1rem, 4vw, 2.5rem);
+
+	/* altura do header (padding sp-6 x2 + conteudo); usada pra travar o hero em 1 viewport */
+	--header-h: 5.75rem;
+
+	--border: 2px solid var(--ink);
+	--radius: 0;
+
+	--ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+	--dur: 180ms;
+}

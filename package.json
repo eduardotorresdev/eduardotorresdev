@@ -1,21 +1,40 @@
 {
-  "name": "eduardotorresdev",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "server": "node server/index.js"
-  },
-  "devDependencies": {
-    "express": "^4.18.2",
-    "js-yaml": "^4.1.0",
-    "mustache": "^4.2.0",
-    "node-fetch": "^3.3.1",
-    "sass": "^1.62.1",
-    "socket.io-client": "^4.6.1",
-    "vite": "^4.3.9"
-  }
+	"name": "eduardotorresdev",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && tsc -p functions/tsconfig.json",
+		"lint": "oxlint",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"deploy": "wrangler pages deploy build --project-name=eduardotorresdev --branch=main"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^5.20260907.1",
+		"@resvg/resvg-js": "^2.6.2",
+		"@sveltejs/adapter-static": "^3.0.10",
+		"@sveltejs/kit": "^2.63.0",
+		"@sveltejs/vite-plugin-svelte": "^7.1.2",
+		"@types/node": "^26.4.1",
+		"gray-matter": "^4.0.3",
+		"mdsvex": "^0.12.8",
+		"oxlint": "^1.81.0",
+		"prettier": "^3.9.6",
+		"prettier-plugin-svelte": "^4.1.1",
+		"satori": "^0.33.4",
+		"shiki": "^4.4.3",
+		"svelte": "^5.56.1",
+		"svelte-check": "^4.6.0",
+		"typescript": "^6.0.3",
+		"vite": "^8.0.16",
+		"vitest": "^5.0.0",
+		"wrangler": "^4.130.0"
+	}
 }
