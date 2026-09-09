@@ -75,3 +75,9 @@ export function alternatePath(
 ): string {
 	return page.data.alternates?.[target] ?? switchLocalePath(page.url.pathname, target);
 }
+
+/** A home de cada idioma: `/` e `/en` (e as variantes com barra final). */
+export function isHomePath(pathname: string): boolean {
+	const internal = publicToInternalPath(pathname).replace(/\/+$/, '');
+	return internal === '' || internal === '/' + localePrefix.en;
+}

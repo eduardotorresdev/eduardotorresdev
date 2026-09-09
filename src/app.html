@@ -12,7 +12,14 @@
 			type="font/woff2"
 			crossorigin
 		/>
-		%sveltekit.head%
+		<!--
+			Preenchido pelo hook, por rota. Precisa vir antes do bloco do SvelteKit:
+			lá dentro saem ~16 link rel=modulepreload, e um preload de imagem depois
+			deles entra na fila atrás de todo o JS de hidratação.
+			(Não cite o placeholder do head aqui: o SvelteKit substitui a primeira
+			ocorrência que encontrar, comentário incluído.)
+		-->
+		%head.preload% %sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>

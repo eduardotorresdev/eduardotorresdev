@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
 	href,
 	homeAnchor,
+	isHomePath,
 	localeFromPath,
 	publicToInternalPath,
 	switchLocalePath
@@ -51,5 +52,19 @@ describe('localeFromPath', () => {
 		expect(localeFromPath('/')).toBe('pt-BR');
 		expect(localeFromPath('/en/blog')).toBe('en');
 		expect(localeFromPath('/english')).toBe('pt-BR');
+	});
+});
+
+describe('isHomePath', () => {
+	it('reconhece a home dos dois idiomas', () => {
+		expect(isHomePath('/')).toBe(true);
+		expect(isHomePath('/en')).toBe(true);
+		expect(isHomePath('/en/')).toBe(true);
+	});
+
+	it('não confunde rota interna com a home', () => {
+		for (const path of ['/sobre', '/en/about', '/blog', '/cases', '/en/cases']) {
+			expect(isHomePath(path)).toBe(false);
+		}
 	});
 });

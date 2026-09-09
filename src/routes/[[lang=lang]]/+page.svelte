@@ -23,27 +23,48 @@
 		</div>
 	</div>
 	<figure class="portrait">
-		<img
-			class="sketch"
-			src="/img/eduardo-torres-linhas.webp"
-			alt=""
-			aria-hidden="true"
-			width="1755"
-			height="1545"
-			loading="lazy"
-		/>
+		<!--
+			É o elemento de LCP da home: nada de lazy nem prioridade baixa.
+			O desenho vive quase todo no canal alpha, então quem manda no peso do
+			arquivo é o -alpha_q do cwebp, não o -q.
+
+			Direção de arte: no mobile o traço cai pra 40% de opacidade, onde a
+			hachura fina some — um arquivo menor ali é indistinguível e tira
+			13 KB do caminho crítico do LCP.
+		-->
+		<picture>
+			<source media="(max-width: 56rem)" srcset="/img/eduardo-torres-linhas-800.webp" />
+			<img
+				class="sketch"
+				src="/img/eduardo-torres-linhas.webp"
+				alt=""
+				aria-hidden="true"
+				width="1400"
+				height="1232"
+				fetchpriority="high"
+				decoding="async"
+			/>
+		</picture>
 		<img
 			src="/img/eduardo-torres.webp"
+			srcset="/img/eduardo-torres-560.webp 560w, /img/eduardo-torres.webp 920w"
+			sizes="(min-width: 56rem) 486px, min(100vw, 320px)"
 			alt={d.hero.photoAlt}
 			width="920"
 			height="1150"
-			fetchpriority="high"
+			decoding="async"
 		/>
 	</figure>
 </section>
 
 <section class="container section" aria-labelledby="cases-title">
-	<SectionHead id="cases" title={d.sections.cases.title} lead={d.sections.cases.lead} eyebrow="01" />
+	<SectionHead
+		id="cases"
+		titleId="cases-title"
+		title={d.sections.cases.title}
+		lead={d.sections.cases.lead}
+		eyebrow="01"
+	/>
 	<div class="cases">
 		{#each data.cases as entry, index (entry.slug)}
 			<CaseCard {entry} {locale} {index} />
@@ -56,7 +77,13 @@
 </section>
 
 <section class="container section" aria-labelledby="projetos-title">
-	<SectionHead id="projetos" title={d.sections.projects.title} lead={d.sections.projects.lead} eyebrow="02" />
+	<SectionHead
+		id="projetos"
+		titleId="projetos-title"
+		title={d.sections.projects.title}
+		lead={d.sections.projects.lead}
+		eyebrow="02"
+	/>
 	<ul class="projects" role="list">
 		{#each data.projects as entry (entry.slug)}
 			<ProjectItem {entry} {locale} />

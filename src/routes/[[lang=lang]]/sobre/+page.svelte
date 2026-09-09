@@ -25,7 +25,15 @@
 			{/each}
 		</div>
 		<figure class="portrait">
-			<img src="/img/eduardo-torres.webp" alt={d.hero.photoAlt} width="920" height="1150" />
+			<img
+				src="/img/eduardo-torres.webp"
+				srcset="/img/eduardo-torres-560.webp 560w, /img/eduardo-torres.webp 920w"
+				sizes="(min-width: 48rem) 384px, min(100vw, 224px)"
+				alt={d.hero.photoAlt}
+				width="920"
+				height="1150"
+				fetchpriority="high"
+			/>
 		</figure>
 	</div>
 
