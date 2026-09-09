@@ -113,8 +113,8 @@
 		src="/img/sao-luis-linhas.webp"
 		alt=""
 		aria-hidden="true"
-		width="880"
-		height="587"
+		width="1280"
+		height="853"
 		loading="lazy"
 		decoding="async"
 	/>
@@ -187,7 +187,7 @@
 		*/
 		filter: grayscale(1) brightness(1.5) contrast(1.3);
 		mix-blend-mode: multiply;
-		opacity: 0.12;
+		opacity: 0.2;
 		pointer-events: none;
 		z-index: -1;
 		mask-image: linear-gradient(to bottom, transparent, black 45%);
@@ -196,8 +196,8 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		width: 24vw;
-		height: 24vw;
+		width: 31vw;
+		height: 31vw;
 		/* Borda difusa: cheio no miolo, dissolvendo até sumir na borda do círculo. */
 		background: radial-gradient(
 			circle closest-side,
@@ -207,8 +207,8 @@
 			color-mix(in srgb, var(--bg) 20%, transparent) 78%,
 			transparent 100%
 		);
-		filter: blur(12px);
-		translate: calc(var(--spot-x) - 12vw) calc(var(--spot-y) - 12vw);
+		filter: blur(8px);
+		translate: calc(var(--spot-x) - 15.5vw) calc(var(--spot-y) - 15.5vw);
 		pointer-events: none;
 		opacity: 0;
 		scale: 0.75;
@@ -249,14 +249,16 @@
 	}
 	.title {
 		display: grid;
-		font-size: var(--fs-3xl);
+		/* Nunca quebra linha: no mobile o tamanho segue a largura da tela. */
+		font-size: min(var(--fs-3xl), 10vw);
 		line-height: 0.88;
+		white-space: nowrap;
 	}
 	/* Fantasma e texto digitado ocupam a mesma célula do grid. */
 	.ghost,
 	.typed {
 		grid-area: 1 / 1;
-		white-space: pre-wrap;
+		white-space: pre;
 	}
 	.ghost {
 		visibility: hidden;
@@ -320,6 +322,38 @@
 	@media (max-width: 56rem) {
 		.grid {
 			grid-template-columns: 1fr;
+		}
+		/* No mobile o título e a xícara ficam mais juntos e o respiro até o form encurta. */
+		.inner {
+			gap: var(--sp-8);
+		}
+		.head {
+			margin-bottom: var(--sp-8);
+		}
+		/* Título e xícara dividem a mesma linha; o título pode quebrar em duas,
+		   então o que precisa caber ao lado da xícara é a palavra mais longa. */
+		.head {
+			justify-items: stretch;
+		}
+		/* A linha precisa ter a largura toda, senão ela cresce com o texto e nada quebra. */
+		.title-row {
+			width: 100%;
+			flex-wrap: nowrap;
+			align-items: flex-end;
+			gap: var(--sp-3);
+		}
+		.title {
+			white-space: normal;
+			text-align: left;
+			font-size: calc((100vw - 2 * var(--gutter) - 3.5rem - var(--sp-3)) / 5.3);
+		}
+		.ghost,
+		.typed {
+			white-space: pre-wrap;
+		}
+		.cup {
+			width: 3.5rem;
+			margin-bottom: 0;
 		}
 	}
 	.bottom {

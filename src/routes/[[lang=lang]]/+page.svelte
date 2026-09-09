@@ -204,7 +204,9 @@
 		.hero {
 			grid-template-columns: 1fr;
 			min-height: 0;
-			margin-top: 0;
+			/* Encosta mais no header: sem o padding de cima e descontando parte do respiro do main. */
+			margin-top: calc(-1 * var(--sp-6));
+			padding-top: 0;
 		}
 		.portrait {
 			justify-self: start;

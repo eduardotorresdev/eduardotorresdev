@@ -292,5 +292,8 @@
 		.form {
 			grid-template-columns: 1fr;
 		}
+		label {
+			font-size: var(--fs-xs);
+		}
 	}
 </style>
