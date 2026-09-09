@@ -17,6 +17,39 @@
 	// O contador só aparece perto do fim, a 70% do limite.
 	const showCounter = $derived(message.length >= MESSAGE_MAX * 0.7);
 
+	/*
+	 * O script do Turnstile pesa ~120 KB e o formulário vive no rodapé de toda
+	 * página. Só buscamos quando o widget chega perto da viewport, para não
+	 * cobrar esse terceiro de quem nunca desce até o contato.
+	 */
+	function turnstile(node: HTMLElement) {
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (!entry.isIntersecting) return;
+				observer.disconnect();
+				if (document.querySelector('script[data-turnstile]')) return;
+				const preconnect = document.createElement('link');
+				preconnect.rel = 'preconnect';
+				preconnect.href = 'https://challenges.cloudflare.com';
+				preconnect.crossOrigin = '';
+				document.head.append(preconnect);
+				const script = document.createElement('script');
+				script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+				script.async = true;
+				script.defer = true;
+				script.dataset.turnstile = '';
+				document.head.append(script);
+			},
+			{ rootMargin: '400px' }
+		);
+		observer.observe(node);
+		return {
+			destroy() {
+				observer.disconnect();
+			}
+		};
+	}
+
 	async function submit(event: SubmitEvent) {
 		event.preventDefault();
 		const form = event.currentTarget as HTMLFormElement;
@@ -79,7 +112,12 @@
 	</div>
 
 	{#if PUBLIC_TURNSTILE_SITE_KEY}
-		<div class="cf-turnstile field--wide" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-size="flexible"></div>
+		<div
+			class="cf-turnstile field--wide"
+			data-sitekey={PUBLIC_TURNSTILE_SITE_KEY}
+			data-size="flexible"
+			use:turnstile
+		></div>
 	{/if}
 
 	<div class="actions field--wide">
@@ -96,12 +134,6 @@
 		</button>
 	</div>
 </form>
-
-<svelte:head>
-	{#if PUBLIC_TURNSTILE_SITE_KEY}
-		<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-	{/if}
-</svelte:head>
 
 <style>
 	.form {
@@ -168,10 +200,12 @@
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
 	}
+	/* O traço grosso da direção de arte, mas em --ink: o --shadow dava 1.66:1,
+	   abaixo dos 3:1 que a WCAG 1.4.11 exige pro indicador de foco. */
 	input:focus-visible,
 	textarea:focus-visible {
 		outline: none;
-		box-shadow: 0 4px 0 var(--shadow);
+		box-shadow: 0 4px 0 var(--ink);
 	}
 	/* Cresce só na vertical e nunca estoura a coluna do grid. */
 	/* Altura fixa de 3 linhas: não cresce nem encolhe com o conteúdo. */

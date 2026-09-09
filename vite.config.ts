@@ -24,7 +24,13 @@ export default defineConfig({
 			prerender: {
 				handleHttpError: 'fail',
 				handleMissingId: 'warn'
-			}
+			},
+			/*
+			 * Tudo é prerenderizado e o CSS por rota é pequeno (o maior, o do
+			 * layout, tem ~13 KB). Inline no <head> tira as 5 requisições que
+			 * bloqueavam a renderização e adianta o LCP.
+			 */
+			inlineStyleThreshold: 14000
 		})
 	],
 	server: {
