@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
+	import ReadingProgress from '$lib/components/ReadingProgress.svelte';
 	import Seo from '$lib/components/Seo.svelte';
+	import Tldr from '$lib/components/Tldr.svelte';
 	import { homeAnchor, href, localeFile, t } from '$lib/i18n';
 
 	let { data } = $props();
@@ -8,6 +10,8 @@
 	const d = $derived(t(locale));
 	const entry = $derived(data.entry);
 	const Body = $derived(data.body);
+
+	let article = $state<HTMLElement>();
 </script>
 
 <Seo
@@ -23,7 +27,9 @@
 	]}
 />
 
-<article class="container case">
+<ReadingProgress target={article} label={d.reading.progress} />
+
+<article class="container case" bind:this={article}>
 	<header class="head">
 		<a class="back" href={homeAnchor(locale, 'cases')}>← {d.nav.cases}</a>
 		<h1>{entry.meta.title}</h1>
@@ -59,6 +65,10 @@
 			{/if}
 		</dl>
 	</header>
+
+	{#if entry.meta.tldr}
+		<Tldr items={entry.meta.tldr} label={d.reading.tldr} description={d.reading.tldrLabel} />
+	{/if}
 
 	{#if entry.meta.cover}
 		<img class="cover" src={entry.meta.cover} alt="" width="1400" height="800" />
@@ -120,6 +130,9 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 4px;
+	}
+	.case :global(.tldr) {
+		max-width: 56rem;
 	}
 	.cover {
 		width: 100%;

@@ -64,6 +64,11 @@ export const en: Dictionary = {
 		link: 'See project',
 		readCase: 'Read the case'
 	},
+	reading: {
+		progress: 'Reading progress',
+		tldr: 'TL;DR',
+		tldrLabel: 'Content summary'
+	},
 	projectMeta: {
 		type: { 'open-source': 'Open source', article: 'Article', tool: 'Tool', experiment: 'Experiment' },
 		open: 'Open'

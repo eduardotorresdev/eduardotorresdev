@@ -9,9 +9,13 @@ export interface BaseMeta {
 	draft?: boolean;
 }
 
+/** Resumo em tópicos exibido antes do corpo. Uma string vira um tópico só. */
+export type Tldr = string | string[];
+
 export interface PostMeta extends BaseMeta {
 	date: string;
 	tags: string[];
+	tldr?: Tldr;
 }
 
 export interface CaseMeta extends BaseMeta {
@@ -22,6 +26,7 @@ export interface CaseMeta extends BaseMeta {
 	link?: string;
 	featured?: boolean;
 	order?: number;
+	tldr?: Tldr;
 }
 
 export type ProjectType = 'open-source' | 'article' | 'tool' | 'experiment';

@@ -68,6 +68,11 @@ export const ptBR = {
 		link: 'Ver projeto',
 		readCase: 'Ler o case'
 	},
+	reading: {
+		progress: 'Progresso da leitura',
+		tldr: 'TL;DR',
+		tldrLabel: 'Resumo do conteúdo'
+	},
 	projectMeta: {
 		type: { 'open-source': 'Open source', article: 'Artigo', tool: 'Ferramenta', experiment: 'Experimento' },
 		open: 'Abrir'

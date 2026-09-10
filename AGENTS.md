@@ -68,7 +68,8 @@ tests/                    vitest
   fonte Bricolage Grotesque variável: 800 nos headings, 300/400 no corpo. Monocromático, sem cor de acento.
 - **Conteúdo:** todo post/case/projeto existe nos dois idiomas, mesmo slug (nome da pasta).
   Projeto sem corpo (só frontmatter) linka direto pro `link` externo; com corpo ganha `/projetos/<slug>`.
-  Frontmatter tipado em `src/lib/content/types.ts`. Dentro do markdown, `<Gallery>` e `<Placeholder>`
+  Frontmatter tipado em `src/lib/content/types.ts`. Post e case aceitam `tldr` (string ou lista de
+  strings), renderizado antes do corpo pelo `Tldr.svelte`. Dentro do markdown, `<Gallery>` e `<Placeholder>`
   estão disponíveis sem import (ver `ContentLayout.svelte`).
 - **i18n:** strings de interface só via `t(locale)`. `pt-br.ts` é a fonte; `en.ts` é `Dictionary`, então
   chave faltando quebra o type-check. URLs sempre por `href()` / `homeAnchor()`, nunca string na mão.

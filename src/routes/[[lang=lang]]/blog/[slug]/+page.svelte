@@ -1,5 +1,7 @@
 <script lang="ts">
+	import ReadingProgress from '$lib/components/ReadingProgress.svelte';
 	import Seo from '$lib/components/Seo.svelte';
+	import Tldr from '$lib/components/Tldr.svelte';
 	import { readingTime } from '$lib/content/reading-time';
 	import { formatDate, href, localeFile, t } from '$lib/i18n';
 
@@ -8,6 +10,8 @@
 	const d = $derived(t(locale));
 	const post = $derived(data.post);
 	const Body = $derived(data.body);
+
+	let article = $state<HTMLElement>();
 </script>
 
 <Seo
@@ -25,7 +29,9 @@
 	]}
 />
 
-<article class="container post">
+<ReadingProgress target={article} label={d.reading.progress} />
+
+<article class="container post" bind:this={article}>
 	<header class="head">
 		<div class="meta">
 			<time datetime={post.meta.date}>{formatDate(locale, post.meta.date)}</time>
@@ -39,6 +45,10 @@
 			{/each}
 		</ul>
 	</header>
+
+	{#if post.meta.tldr}
+		<Tldr items={post.meta.tldr} label={d.reading.tldr} description={d.reading.tldrLabel} />
+	{/if}
 
 	{#if post.meta.cover}
 		<img class="cover" src={post.meta.cover} alt="" width="1200" height="630" />
@@ -72,6 +82,7 @@
 		display: grid;
 		gap: var(--sp-4);
 		max-width: 56rem;
+		margin-inline: auto;
 	}
 	.meta {
 		display: flex;
@@ -91,9 +102,15 @@
 		flex-wrap: wrap;
 		gap: var(--sp-2);
 	}
+	.post :global(.tldr) {
+		width: 100%;
+		max-width: 56rem;
+		margin-inline: auto;
+	}
 	.cover {
 		width: 100%;
 		max-width: 56rem;
+		margin-inline: auto;
 		border: var(--border);
 		box-shadow: var(--shadow-lg);
 	}
