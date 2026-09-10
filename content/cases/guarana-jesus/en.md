@@ -5,6 +5,11 @@ client: Guaraná Jesus
 year: 2021
 role: Full-stack developer
 stack: [PHP, JavaScript, MySQL, CSS]
+tldr:
+  - 'Full website and system for the most Maranhão brand there is.'
+  - 'Full-cycle: architecture, implementation and deploy, on an agency deadline.'
+  - 'Focused on loading fast on the 3G of someone at the beach.'
+  - 'Delivered on time and stable in production.'
 featured: true
 order: 3
 ---

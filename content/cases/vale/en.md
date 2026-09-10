@@ -5,6 +5,11 @@ client: Vale
 year: 2022
 role: Full-stack developer
 stack: [JavaScript, Node.js, PostgreSQL]
+tldr:
+  - "Web system for Vale's operation in Maranhão, developed at Maximize."
+  - 'Reliability above all: it could not go down or lose data.'
+  - 'Simple architecture, tests on the critical rules and predictable deploys.'
+  - 'In production with no incidents during the period I followed it.'
 order: 4
 ---
 

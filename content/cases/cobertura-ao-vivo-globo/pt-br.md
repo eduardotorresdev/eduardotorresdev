@@ -5,6 +5,11 @@ client: Grupo Globo
 year: 2024
 role: Desenvolvedor front-end, liderança técnica
 stack: [TypeScript, React, Micro-frontends, Testes A/B, Core Web Vitals]
+tldr:
+  - 'Formato de cobertura ao vivo do G1 e do GE, com milhões de pessoas na mesma página ao mesmo tempo.'
+  - 'Novos padrões de interação validados em testes A/B e MAB antes de virar padrão.'
+  - 'Componentes compartilhados entre os dois produtos, com carregamento progressivo.'
+  - '+24% de receita publicitária, com Core Web Vitals no verde.'
 featured: true
 order: 1
 ---

@@ -5,6 +5,11 @@ client: Grupo Globo
 year: 2023
 role: Desenvolvedor front-end
 stack: [TypeScript, React, Design Systems, Acessibilidade, CSS]
+tldr:
+  - 'Design system da Globo, usado por G1, GE, Gshow e Receitas.'
+  - 'Componentes com API estável, tokens compartilhados e acessibilidade por padrão.'
+  - 'Adoção incremental, produto por produto, com documentação e suporte direto aos times.'
+  - 'Menos retrabalho e uma base comum pra evoluir a experiência de milhões de pessoas.'
 featured: true
 order: 2
 ---

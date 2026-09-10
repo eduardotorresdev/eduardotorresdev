@@ -5,6 +5,11 @@ client: Grupo Globo
 year: 2023
 role: Front-end developer
 stack: [TypeScript, React, Design Systems, Accessibility, CSS]
+tldr:
+  - "Globo's design system, used by G1, GE, Gshow and Receitas."
+  - 'Components with a stable API, shared tokens and accessibility by default.'
+  - 'Incremental adoption, product by product, with documentation and direct support to the teams.'
+  - 'Less rework and a common base to evolve the experience of millions of people.'
 featured: true
 order: 2
 ---

@@ -5,6 +5,11 @@ client: Grupo Globo
 year: 2024
 role: Front-end developer, tech lead
 stack: [TypeScript, React, Micro-frontends, A/B testing, Core Web Vitals]
+tldr:
+  - 'G1 and GE live coverage format, with millions of people on the same page at the same time.'
+  - 'New interaction patterns validated with A/B and MAB tests before becoming the default.'
+  - 'Components shared between both products, with progressive loading.'
+  - '+24% ad revenue, with Core Web Vitals in the green.'
 featured: true
 order: 1
 ---
