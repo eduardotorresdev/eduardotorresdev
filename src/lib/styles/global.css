@@ -194,6 +194,8 @@ a.tag:hover {
 	margin-inline: auto;
 	font-size: 1.15rem;
 	line-height: 1.65;
+	/* URL crua ou identificador longo não empurra a coluna de texto */
+	overflow-wrap: break-word;
 }
 .prose > * + * {
 	margin-top: 1.25em;
@@ -249,8 +251,12 @@ a.tag:hover {
 	border-top: var(--border);
 	margin: 3em 0;
 }
+/* Tabela larga rola sozinha em vez de estourar a largura da página */
 .prose table {
-	width: 100%;
+	display: block;
+	width: max-content;
+	max-width: 100%;
+	overflow-x: auto;
 	border-collapse: collapse;
 	font-size: var(--fs-sm);
 }

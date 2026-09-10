@@ -59,86 +59,132 @@
 	aria-valuemin={0}
 	aria-valuemax={100}
 	aria-valuenow={percent}
+	style:--progress={progress}
 >
-	<svg viewBox="0 0 48 48" aria-hidden="true">
-		<circle
-			class="bar"
-			cx="24"
-			cy="24"
-			r={radius}
-			stroke-dasharray={circumference}
-			stroke-dashoffset={circumference * (1 - progress)}
-		/>
-	</svg>
-	<span class="percent">{percent}</span>
+	<!-- Mostrador circular no desktop; barra fina no topo da viewport em telas menores. -->
+	<div class="dial">
+		<svg viewBox="0 0 48 48" aria-hidden="true">
+			<circle
+				class="bar"
+				cx="24"
+				cy="24"
+				r={radius}
+				stroke-dasharray={circumference}
+				stroke-dashoffset={circumference * (1 - progress)}
+			/>
+		</svg>
+		<span class="percent">{percent}</span>
+	</div>
+	<div class="track" aria-hidden="true"><div class="fill"></div></div>
 </div>
 
 <style>
 	.progress {
 		position: fixed;
-		left: var(--gutter);
-		top: 10vh;
 		z-index: 5;
-		display: grid;
-		place-items: center;
-		width: 3.5rem;
-		height: 3.5rem;
-		border: var(--border);
-		border-radius: 50%;
-		background: var(--surface);
-		box-shadow: var(--shadow-sm);
 		opacity: 0;
 		visibility: hidden;
-		transform: translateY(0.5rem);
 		transition:
 			opacity var(--dur) var(--ease-out),
 			transform var(--dur) var(--ease-out),
-			background-color var(--dur) var(--ease-out),
-			color var(--dur) var(--ease-out),
 			visibility var(--dur);
-	}
-	.progress.complete {
-		background: var(--ink);
-		color: var(--bg);
 	}
 	.progress.visible {
 		opacity: 1;
 		visibility: visible;
 		transform: none;
 	}
-	svg {
-		position: absolute;
-		inset: 0;
-		width: 100%;
+
+	/* Barra horizontal: padrão, some a partir de 64rem. */
+	.track {
+		height: 4px;
+		background: var(--surface);
+		border-bottom: 1.5px solid var(--ink);
+	}
+	.fill {
 		height: 100%;
-		transform: rotate(-90deg);
-		overflow: visible;
+		width: 100%;
+		background: var(--ink);
+		transform: scaleX(var(--progress));
+		transform-origin: left center;
+		transition: transform 120ms linear;
 	}
-	circle {
-		fill: none;
-		stroke-width: 3;
-	}
-	.bar {
-		stroke: var(--ink);
-		stroke-linecap: butt;
-		/* suaviza o passo entre frames de scroll */
-		transition: stroke-dashoffset 200ms linear;
-	}
-	.percent {
-		font-size: var(--fs-xs);
-		font-weight: var(--w-heavy);
-		font-variant-numeric: tabular-nums;
-		line-height: 1;
+	.dial {
+		display: none;
 	}
 
-	/* Não há folga ao lado do texto abaixo de 64rem. */
-	@media (max-width: 64rem) {
+	@media (max-width: 63.999rem) {
 		.progress {
-			display: none;
+			left: 0;
+			right: 0;
+			top: 0;
+			transform: translateY(-100%);
 		}
 	}
-	@media (prefers-reduced-motion: reduce) {
+
+	/* Mostrador circular só quando há folga ao lado do texto. */
+	@media (min-width: 64rem) {
+		.track {
+			display: none;
+		}
+		.progress {
+			left: var(--gutter);
+			top: 10vh;
+			transform: translateY(0.5rem);
+			transition:
+				opacity var(--dur) var(--ease-out),
+				transform var(--dur) var(--ease-out),
+				background-color var(--dur) var(--ease-out),
+				color var(--dur) var(--ease-out),
+				visibility var(--dur);
+		}
+		.dial {
+			display: grid;
+			place-items: center;
+			position: relative;
+			width: 3.5rem;
+			height: 3.5rem;
+			border: var(--border);
+			border-radius: 50%;
+			background: var(--surface);
+			box-shadow: var(--shadow-sm);
+			transition:
+				background-color var(--dur) var(--ease-out),
+				color var(--dur) var(--ease-out);
+		}
+		.progress.complete .dial {
+			background: var(--ink);
+			color: var(--bg);
+		}
+		svg {
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			transform: rotate(-90deg);
+			overflow: visible;
+		}
+		circle {
+			fill: none;
+			stroke-width: 3;
+		}
 		.bar {
+			stroke: var(--ink);
+			stroke-linecap: butt;
+			/* suaviza o passo entre frames de scroll */
+			transition: stroke-dashoffset 200ms linear;
+		}
+		.percent {
+			font-size: var(--fs-xs);
+			font-weight: var(--w-heavy);
+			font-variant-numeric: tabular-nums;
+			line-height: 1;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.bar,
+		.fill {
 			transition: none;
 		}
 		.progress {
