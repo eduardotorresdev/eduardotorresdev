@@ -191,6 +191,7 @@ a.tag:hover {
 /* Prosa dos posts e cases */
 .prose {
 	max-width: var(--measure);
+	margin-inline: auto;
 	font-size: 1.15rem;
 	line-height: 1.65;
 }

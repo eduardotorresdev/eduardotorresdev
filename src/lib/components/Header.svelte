@@ -180,13 +180,15 @@
 	.bar {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: flex-end;
 		gap: var(--sp-6);
 		flex-wrap: wrap;
 	}
 	.identity {
 		display: grid;
 		gap: 2px;
+		/* Empurra nav e ações pra direita, juntas. */
+		margin-inline-end: auto;
 	}
 	.identity-top {
 		display: flex;
