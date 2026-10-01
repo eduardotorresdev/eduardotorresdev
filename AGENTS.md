@@ -103,6 +103,12 @@ pro `us-assets.i.posthog.com` e o resto pro `us.i.posthog.com`. É o que faz a m
 a bloqueador e a rede corporativa que filtra domínio de analytics — o caso das propostas, onde o
 acesso que importa vem de dentro da empresa do cliente. Nunca apontar o snippet direto pro PostHog.
 
+O que o script não alcança é capturado pelo próprio servidor, direto no PostHog (sem passar
+pelo `/ph`): `proposta_token_invalido`, quando o link chega truncado ou com token trocado — o 404
+não roda JS —, e `proposta_aberta_servidor`, que pega quem bloqueia script. Identidade é hash de
+IP + user-agent; o IP só vai como `$ip` pro PostHog resolver cidade, não é guardado. Vai em
+`waitUntil`: medição nunca atrasa nem derruba a entrega da proposta.
+
 Gravação de sessão ligada com `maskAllInputs` (formulário de contato e busca do protótipo não
 entram). Dentro de iframe a gravação é desligada: o documento pai é same-origin e já captura o
 frame, então o protótipo aparece na gravação da página que o contém, sem duplicar sessão.

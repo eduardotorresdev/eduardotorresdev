@@ -14,7 +14,7 @@
  * Subir/atualizar: scripts/proposal-upload.sh <slug> <pasta> <token>
  */
 
-import { analyticsTags } from '../_lib/analytics';
+import { analyticsTags, INGEST_URL, serverEventPayload } from '../_lib/analytics';
 import { contentType, cookieName, readCookie, resolvePath, sameToken } from '../_lib/proposal';
 
 interface Env {
@@ -33,6 +33,51 @@ const PRIVATE_HEADERS = {
 	'x-frame-options': 'SAMEORIGIN',
 	'referrer-policy': 'no-referrer'
 };
+
+// Identidade estável por visitante sem guardar IP: hash de IP + user-agent.
+async function visitorId(request: Request, slug: string): Promise<string> {
+	const seed = [
+		request.headers.get('cf-connecting-ip') ?? '',
+		request.headers.get('user-agent') ?? '',
+		slug
+	].join('|');
+	const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(seed));
+	const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+	return `servidor-${hex.slice(0, 16)}`;
+}
+
+// Captura do lado do servidor. Cobre o que o script não cobre: token inválido,
+// que devolve 404 sem rodar JS, e visitante que bloqueia script.
+function reportFromServer(
+	env: Env,
+	waitUntil: (promise: Promise<unknown>) => void,
+	request: Request,
+	event: string,
+	slug: string
+): void {
+	const key = env.PUBLIC_POSTHOG_KEY;
+	if (!key) return;
+	waitUntil(
+		visitorId(request, slug)
+			.then((distinctId) =>
+				fetch(INGEST_URL, {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify(
+						serverEventPayload({
+							key,
+							event,
+							distinctId,
+							properties: { surface: 'proposta', proposta: slug },
+							ip: request.headers.get('cf-connecting-ip') ?? undefined
+						})
+					)
+				})
+			)
+			// Medição nunca derruba a entrega da proposta.
+			.catch(() => undefined)
+	);
+}
 
 // Injeta as tags no fim do <head>, em trânsito: o HTML no bucket não muda.
 function injectAnalytics(response: Response, tags: string): Response {
@@ -54,7 +99,7 @@ async function notFound(env: Env, url: URL): Promise<Response> {
 	});
 }
 
-export const onRequest: PagesFunction<Env, 'path'> = async ({ request, env, params }) => {
+export const onRequest: PagesFunction<Env, 'path'> = async ({ request, env, params, waitUntil }) => {
 	const url = new URL(request.url);
 	if (request.method !== 'GET' && request.method !== 'HEAD') {
 		return new Response(null, { status: 405, headers: { allow: 'GET, HEAD' } });
@@ -70,7 +115,12 @@ export const onRequest: PagesFunction<Env, 'path'> = async ({ request, env, para
 
 	const given = url.searchParams.get('token');
 	if (given !== null) {
-		if (!sameToken(given, expected)) return notFound(env, url);
+		if (!sameToken(given, expected)) {
+			// Link encaminhado truncado ou token trocado: muda o follow-up por
+			// completo, então é o único 404 que vale registrar.
+			reportFromServer(env, waitUntil, request, 'proposta_token_invalido', path.slug);
+			return notFound(env, url);
+		}
 		url.searchParams.delete('token');
 		// /propostas/abee → /propostas/abee/: sem a barra os caminhos relativos quebram.
 		const target = url.pathname === base.slice(0, -1) ? base + url.search : url.pathname + url.search;
@@ -111,6 +161,8 @@ export const onRequest: PagesFunction<Env, 'path'> = async ({ request, env, para
 	const headers = new Headers(PRIVATE_HEADERS);
 	headers.set('content-type', type);
 	if (request.method === 'HEAD') return new Response(null, { headers });
+
+	reportFromServer(env, waitUntil, request, 'proposta_aberta_servidor', path.slug);
 
 	// O material do cliente não é tocado no bucket: a injeção é só na resposta.
 	return injectAnalytics(

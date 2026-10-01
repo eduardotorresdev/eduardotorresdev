@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { analyticsTags } from '../functions/_lib/analytics';
+import { analyticsTags, serverEventPayload } from '../functions/_lib/analytics';
 
 describe('analyticsTags', () => {
 	it('não emite nada sem key, pra dev e preview ficarem limpos', () => {
@@ -26,5 +26,31 @@ describe('analyticsTags', () => {
 		});
 		expect(tags).not.toContain('</script><img');
 		expect(tags).toContain('&lt;/script&gt;');
+	});
+});
+
+describe('serverEventPayload', () => {
+	it('marca a origem e repassa o IP só pra geolocalização', () => {
+		const payload = serverEventPayload({
+			key: 'phc_abc',
+			event: 'proposta_token_invalido',
+			distinctId: 'servidor-abc123',
+			properties: { surface: 'proposta', proposta: 'abee' },
+			ip: '203.0.113.9'
+		});
+		expect(payload.api_key).toBe('phc_abc');
+		expect(payload.distinct_id).toBe('servidor-abc123');
+		expect(payload.properties.origem).toBe('servidor');
+		expect(payload.properties.$ip).toBe('203.0.113.9');
+	});
+
+	it('sem IP, não inventa a propriedade', () => {
+		const payload = serverEventPayload({
+			key: 'phc_abc',
+			event: 'proposta_aberta_servidor',
+			distinctId: 'servidor-abc123',
+			properties: { proposta: 'abee' }
+		});
+		expect('$ip' in payload.properties).toBe(false);
 	});
 });

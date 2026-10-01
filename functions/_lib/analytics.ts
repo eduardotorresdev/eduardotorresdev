@@ -27,3 +27,31 @@ export function analyticsTags({ key, properties }: Analytics): string {
 		` data-props="${escapeHtml(JSON.stringify(properties))}"></script>`
 	);
 }
+
+/*
+ * Evento capturado pelo servidor, pro que o JavaScript não alcança: token
+ * inválido (o 404 não roda script nenhum) e acesso de quem bloqueia script.
+ * Vai direto pro PostHog, sem passar pelo /ph — proxy de primeira parte só faz
+ * sentido pro navegador do visitante.
+ */
+export const INGEST_URL = 'https://us.i.posthog.com/i/v0/e/';
+
+export interface ServerEvent {
+	key: string;
+	event: string;
+	// Já derivado de IP + user-agent; nunca o IP cru.
+	distinctId: string;
+	properties: Record<string, string>;
+	// Deixa o PostHog resolver cidade e país; não guardamos o IP.
+	ip?: string;
+}
+
+export function serverEventPayload({ key, event, distinctId, properties, ip }: ServerEvent) {
+	return {
+		api_key: key,
+		event,
+		distinct_id: distinctId,
+		timestamp: new Date().toISOString(),
+		properties: { ...properties, origem: 'servidor', ...(ip ? { $ip: ip } : {}) }
+	};
+}
