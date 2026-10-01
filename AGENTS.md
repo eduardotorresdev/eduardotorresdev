@@ -33,6 +33,7 @@ content/                  markdown, fora do src
   cases/<slug>/{pt-br,en}.md
   projetos/<slug>/{pt-br,en}.md
 functions/api/contact.ts  Pages Function do formulário (Resend + Turnstile)
+functions/propostas/      propostas privadas pra clientes, servidas do R2 com token
 src/
   hooks.ts                reroute: /en/about → /en/sobre
   hooks.server.ts         injeta <html lang>
@@ -77,6 +78,14 @@ tests/                    vitest
   `entries`. Nada de `+server.ts` que dependa de request em runtime; isso vai pra `functions/`.
 - **Testes:** só lógica pura (i18n, loaders, helpers) com Vitest. Sem teste de DOM, sem Playwright.
 - **Commits:** Conventional Commits (`feat:`, `fix:`, `chore:`, `content:` pra posts/cases).
+
+## Propostas privadas
+
+`/propostas/<slug>?token=XXX` serve uma pasta do bucket R2 `eduardotorresdev-propostas` (binding
+`PROPOSALS` no projeto Pages, configurado via API). **O material do cliente nunca entra no repo**, que é
+público: só a Function genérica (`functions/propostas/[[path]].ts`, lógica em `functions/_lib/proposal.ts`).
+O token fica em `<slug>/_token` no bucket; acertou, vira cookie no caminho da proposta. Errou: 404 do site.
+Subir ou atualizar: `scripts/proposal-upload.sh <slug> <pasta-local> [token]` (a pasta precisa de `index.html`).
 
 ## Variáveis de ambiente
 
