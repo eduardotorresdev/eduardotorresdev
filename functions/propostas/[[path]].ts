@@ -14,11 +14,14 @@
  * Subir/atualizar: scripts/proposal-upload.sh <slug> <pasta> <token>
  */
 
+import { analyticsTags } from '../_lib/analytics';
 import { contentType, cookieName, readCookie, resolvePath, sameToken } from '../_lib/proposal';
 
 interface Env {
 	PROPOSALS: R2Bucket;
 	ASSETS: Fetcher;
+	// Vazia desliga a medição (local e preview).
+	PUBLIC_POSTHOG_KEY?: string;
 }
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
@@ -30,6 +33,18 @@ const PRIVATE_HEADERS = {
 	'x-frame-options': 'SAMEORIGIN',
 	'referrer-policy': 'no-referrer'
 };
+
+// Injeta as tags no fim do <head>, em trânsito: o HTML no bucket não muda.
+function injectAnalytics(response: Response, tags: string): Response {
+	if (!tags) return response;
+	return new HTMLRewriter()
+		.on('head', {
+			element(element) {
+				element.append(tags, { html: true });
+			}
+		})
+		.transform(response);
+}
 
 async function notFound(env: Env, url: URL): Promise<Response> {
 	const page = await env.ASSETS.fetch(new URL('/404.html', url));
@@ -73,13 +88,36 @@ export const onRequest: PagesFunction<Env, 'path'> = async ({ request, env, para
 		return notFound(env, url);
 	}
 
-	const object = await env.PROPOSALS.get(path.key, { onlyIf: request.headers });
+	const type = contentType(path.key);
+
+	// Assets seguem com etag e revalidação condicional, como antes.
+	if (!type.startsWith('text/html')) {
+		const object = await env.PROPOSALS.get(path.key, { onlyIf: request.headers });
+		if (!object) return notFound(env, url);
+		const headers = new Headers(PRIVATE_HEADERS);
+		headers.set('content-type', type);
+		headers.set('etag', object.httpEtag);
+		// onlyIf casou com If-None-Match: o R2 devolve o objeto sem corpo.
+		if (!('body' in object)) return new Response(null, { status: 304, headers });
+		return new Response(request.method === 'HEAD' ? null : object.body, { headers });
+	}
+
+	// HTML fica fora da revalidação: o corpo que sai daqui não é o do R2, porque a
+	// medição entra em trânsito. Com etag, um navegador que já abriu a proposta
+	// reusaria a cópia em cache e nunca receberia as tags.
+	const object = await env.PROPOSALS.get(path.key);
 	if (!object) return notFound(env, url);
 
 	const headers = new Headers(PRIVATE_HEADERS);
-	headers.set('content-type', contentType(path.key));
-	headers.set('etag', object.httpEtag);
-	// onlyIf casou com If-None-Match: o R2 devolve o objeto sem corpo.
-	if (!('body' in object)) return new Response(null, { status: 304, headers });
-	return new Response(request.method === 'HEAD' ? null : object.body, { headers });
+	headers.set('content-type', type);
+	if (request.method === 'HEAD') return new Response(null, { headers });
+
+	// O material do cliente não é tocado no bucket: a injeção é só na resposta.
+	return injectAnalytics(
+		new Response(object.body, { headers }),
+		analyticsTags({
+			key: env.PUBLIC_POSTHOG_KEY,
+			properties: { surface: 'proposta', proposta: path.slug }
+		})
+	);
 };

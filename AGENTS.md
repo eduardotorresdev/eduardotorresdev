@@ -34,6 +34,7 @@ content/                  markdown, fora do src
   projetos/<slug>/{pt-br,en}.md
 functions/api/contact.ts  Pages Function do formulário (Resend + Turnstile)
 functions/propostas/      propostas privadas pra clientes, servidas do R2 com token
+functions/ph/             proxy de primeira parte do PostHog (medição)
 src/
   hooks.ts                reroute: /en/about → /en/sobre
   hooks.server.ts         injeta <html lang>
@@ -87,8 +88,30 @@ público: só a Function genérica (`functions/propostas/[[path]].ts`, lógica e
 O token fica em `<slug>/_token` no bucket; acertou, vira cookie no caminho da proposta. Errou: 404 do site.
 Subir ou atualizar: `scripts/proposal-upload.sh <slug> <pasta-local> [token]` (a pasta precisa de `index.html`).
 
+## Medição
+
+PostHog (projeto `640521`, região US), um projeto só pros dois lados, separados pela
+propriedade `surface`: `site` no eduardotorres.dev e `proposta` nas propostas (com `proposta`
+= slug). A configuração toda mora em `static/ph.js`, carregado em dois lugares:
+
+- **site**: tags em `src/app.html`, key via `%sveltekit.env.PUBLIC_POSTHOG_KEY%` (build);
+- **propostas**: injetadas no `<head>` em trânsito pelo `HTMLRewriter` da Function. O HTML do
+  cliente no bucket não é tocado, e por isso HTML não leva `etag` nem revalidação condicional.
+
+Tudo passa por `/ph` (`functions/ph/[[path]].ts`), proxy de primeira parte: `/ph/static/*` vai
+pro `us-assets.i.posthog.com` e o resto pro `us.i.posthog.com`. É o que faz a medição sobreviver
+a bloqueador e a rede corporativa que filtra domínio de analytics — o caso das propostas, onde o
+acesso que importa vem de dentro da empresa do cliente. Nunca apontar o snippet direto pro PostHog.
+
+Gravação de sessão ligada com `maskAllInputs` (formulário de contato e busca do protótipo não
+entram). Dentro de iframe a gravação é desligada: o documento pai é same-origin e já captura o
+frame, então o protótipo aparece na gravação da página que o contém, sem duplicar sessão.
+
 ## Variáveis de ambiente
 
 - `PUBLIC_TURNSTILE_SITE_KEY` (build): chave pública do Turnstile; vazia desliga o widget.
+- `PUBLIC_POSTHOG_KEY`: chave pública do PostHog; vazia desliga a medição. Precisa existir nos
+  dois lugares — variable do repositório (build do site) e env var do projeto Pages (a Function
+  das propostas lê em runtime).
 - Só na Cloudflare (runtime da function, projeto Pages `eduardotorresdev`): `RESEND_API_KEY`,
   `CONTACT_TO`, `CONTACT_FROM`, `TURNSTILE_SECRET`. Configuradas via API; não versionadas.

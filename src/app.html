@@ -23,6 +23,18 @@
 			(Não cite o placeholder do head aqui: o SvelteKit substitui a primeira
 			ocorrência que encontrar, comentário incluído.)
 		-->
+		<!--
+			Medição pelo proxy de primeira parte (/ph → functions/ph). A
+			configuração toda fica em static/ph.js, compartilhada com o HTML das
+			propostas. Key vazia desliga.
+		-->
+		<script defer src="/ph/static/array.js"></script>
+		<script
+			defer
+			src="/ph.js"
+			data-key="%sveltekit.env.PUBLIC_POSTHOG_KEY%"
+			data-props='{"surface":"site"}'
+		></script>
 		%head.preload% %sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
