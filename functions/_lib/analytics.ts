@@ -15,7 +15,7 @@ export interface Analytics {
 
 // Atributo com aspas escapadas já não dá pra fechar, mas escapamos < e > também:
 // nenhum pedaço de slug ou propriedade chega ao HTML como marcação.
-function escapeHtml(value: string): string {
+export function escapeHtml(value: string): string {
 	return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 

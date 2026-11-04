@@ -15,7 +15,17 @@
  */
 
 import { analyticsTags, INGEST_URL, serverEventPayload } from '../_lib/analytics';
-import { contentType, cookieName, readCookie, resolvePath, sameToken } from '../_lib/proposal';
+import {
+	contentType,
+	cookieName,
+	isLinkPreviewBot,
+	PREVIEW_IMAGE,
+	previewImageKey,
+	previewTags,
+	readCookie,
+	resolvePath,
+	sameToken
+} from '../_lib/proposal';
 
 interface Env {
 	PROPOSALS: R2Bucket;
@@ -91,6 +101,52 @@ function injectAnalytics(response: Response, tags: string): Response {
 		.transform(response);
 }
 
+// Imagem de prévia do link, gerada pelo scripts/proposal-upload.sh.
+async function previewImage(env: Env, url: URL, slug: string): Promise<Response> {
+	const object = await env.PROPOSALS.get(previewImageKey(slug));
+	if (!object) return notFound(env, url);
+	return new Response(object.body, {
+		headers: { ...PRIVATE_HEADERS, 'content-type': 'image/jpeg', 'cache-control': 'private, max-age=3600' }
+	});
+}
+
+const decodeEntities = (s: string) =>
+	s.replace(
+		/&(amp|lt|gt|quot|#39|middot);/g,
+		(_, e: string) => ({ amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'", middot: '·' })[e] ?? _
+	);
+
+// Pro robô que monta a prévia do link: o index.html direto, sem redirect, cookie
+// nem medição (a prévia não é o cliente abrindo), com as tags Open Graph no fim
+// do <head>. O título é o próprio <title> da proposta.
+async function linkPreview(env: Env, url: URL, slug: string, token: string): Promise<Response> {
+	const object = await env.PROPOSALS.get(`${slug}/index.html`);
+	if (!object) return notFound(env, url);
+	const hasImage = (await env.PROPOSALS.head(previewImageKey(slug))) !== null;
+	const base = `${url.origin}/propostas/${slug}/`;
+	let title = '';
+	return new HTMLRewriter()
+		.on('meta[property^="og:"], meta[name^="twitter:"]', { element: (el) => void el.remove() })
+		.on('title', { text: (chunk) => void (title += chunk.text) })
+		.on('head', {
+			element(el) {
+				el.onEndTag((end) => {
+					const tags = previewTags({
+						title: decodeEntities(title.trim()) || 'Proposta',
+						url: base,
+						image: hasImage ? `${base}${PREVIEW_IMAGE}?token=${encodeURIComponent(token)}` : undefined
+					});
+					end.before(tags, { html: true });
+				});
+			}
+		})
+		.transform(
+			new Response(object.body, {
+				headers: { ...PRIVATE_HEADERS, 'content-type': 'text/html; charset=utf-8' }
+			})
+		);
+}
+
 async function notFound(env: Env, url: URL): Promise<Response> {
 	const page = await env.ASSETS.fetch(new URL('/404.html', url));
 	return new Response(page.body, {
@@ -121,6 +177,11 @@ export const onRequest: PagesFunction<Env, 'path'> = async ({ request, env, para
 			reportFromServer(env, waitUntil, request, 'proposta_token_invalido', path.slug);
 			return notFound(env, url);
 		}
+		// O robô da prévia não guarda o cookie do redirect: resposta direta pra ele.
+		if (path.key === `${path.slug}/${PREVIEW_IMAGE}`) return previewImage(env, url, path.slug);
+		if (path.key === `${path.slug}/index.html` && isLinkPreviewBot(request.headers.get('user-agent'))) {
+			return linkPreview(env, url, path.slug, given);
+		}
 		url.searchParams.delete('token');
 		// /propostas/abee → /propostas/abee/: sem a barra os caminhos relativos quebram.
 		const target = url.pathname === base.slice(0, -1) ? base + url.search : url.pathname + url.search;
@@ -137,6 +198,8 @@ export const onRequest: PagesFunction<Env, 'path'> = async ({ request, env, para
 	if (!sameToken(readCookie(request.headers.get('cookie'), cookieName(path.slug)), expected)) {
 		return notFound(env, url);
 	}
+
+	if (path.key === `${path.slug}/${PREVIEW_IMAGE}`) return previewImage(env, url, path.slug);
 
 	const type = contentType(path.key);
 

@@ -21,3 +21,6 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Material local de prospecção (leads, credenciais do WhatsApp): nunca versionar
+.contexto/
